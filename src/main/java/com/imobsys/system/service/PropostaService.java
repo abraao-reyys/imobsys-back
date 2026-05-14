@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -67,6 +68,49 @@ public class PropostaService {
         return propostaRepository.findAll().stream()
                 .map(this::mapToResponseDTO)
                 .collect(Collectors.toList());
+    }
+
+    public PropostaResponseDTO buscarPorId(UUID id) {
+        Proposta proposta = propostaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Proposta não encontrada com o ID: " + id));
+        return mapToResponseDTO(proposta);
+    }
+
+    public PropostaResponseDTO atualizarProposta(UUID id, PropostaRequestDTO dto) {
+        Proposta proposta = propostaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Proposta não encontrada com o ID: " + id));
+
+        proposta.setTipo(dto.tipo());
+        proposta.setValor(dto.valor());
+        proposta.setFormaPagamento(dto.formaPagamento());
+        proposta.setTermos(dto.termos());
+
+        if (dto.validade() != null) {
+            proposta.setValidade(dto.validade());
+        }
+
+        if (proposta.getValor() != null && proposta.getValor() < 0) {
+            throw new IllegalArgumentException("O valor da proposta não pode ser negativo.");
+        }
+
+        Proposta propostaAtualizada = propostaRepository.save(proposta);
+        return mapToResponseDTO(propostaAtualizada);
+    }
+
+    public PropostaResponseDTO atualizarStatus(UUID id, String novoStatus) {
+        Proposta proposta = propostaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Proposta não encontrada com o ID: " + id));
+
+        proposta.setStatus(novoStatus.toUpperCase());
+        Proposta propostaAtualizada = propostaRepository.save(proposta);
+        return mapToResponseDTO(propostaAtualizada);
+    }
+
+    public void deletarProposta(UUID id) {
+        if (!propostaRepository.existsById(id)) {
+            throw new RuntimeException("Proposta não encontrada com o ID: " + id);
+        }
+        propostaRepository.deleteById(id);
     }
 
     private PropostaResponseDTO mapToResponseDTO(Proposta proposta) {
