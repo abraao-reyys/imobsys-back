@@ -31,4 +31,32 @@ public class PropostaController {
         List<PropostaResponseDTO> propostas = propostaService.listarTodas();
         return ResponseEntity.ok(propostas);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PropostaResponseDTO> buscarPorId(@PathVariable java.util.UUID id) {
+        PropostaResponseDTO proposta = propostaService.buscarPorId(id);
+        return ResponseEntity.ok(proposta);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PropostaResponseDTO> atualizar(
+            @PathVariable java.util.UUID id,
+            @RequestBody PropostaRequestDTO dto) {
+        PropostaResponseDTO propostaAtualizada = propostaService.atualizarProposta(id, dto);
+        return ResponseEntity.ok(propostaAtualizada);
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<PropostaResponseDTO> atualizarStatus(
+            @PathVariable java.util.UUID id,
+            @RequestParam String novoStatus) {
+        PropostaResponseDTO propostaAtualizada = propostaService.atualizarStatus(id, novoStatus);
+        return ResponseEntity.ok(propostaAtualizada);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable java.util.UUID id) {
+        propostaService.deletarProposta(id);
+        return ResponseEntity.noContent().build();
+    }
 }
