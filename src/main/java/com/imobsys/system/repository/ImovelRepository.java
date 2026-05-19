@@ -8,4 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface ImovelRepository extends JpaRepository<Imovel, UUID> {
+    boolean existsByMatricula(Integer matricula);
 }

@@ -5,10 +5,9 @@ import com.imobsys.system.enums.StatusProposta;
 import com.imobsys.system.enums.TipoProposta;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record PropostaResponseDTO(
+public record PropostaPublicaDTO(
         UUID id,
         TipoProposta tipo,
         StatusProposta status,
@@ -17,10 +16,13 @@ public record PropostaResponseDTO(
         LocalDate validade,
         String termos,
         String observacaoAjuste,
-        LocalDateTime dataCriacao,
-        LocalDateTime dataAtualizacao,
-        String nomeCliente,
-        String telefoneCliente,
+        String nomeCorretor,
+        String telefoneCorretor,
+        String emailCorretor,
         String descricaoImovel,
-        String nomeCorretor
+        String enderecoImovel,
+        String cidadeImovel,
+        Double metragemImovel,
+        Integer qtdComodosImovel,
+        Integer qtdBanheirosImovel
 ) {}
